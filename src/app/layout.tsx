@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const TITLE = "毎日AIレシピ";
@@ -18,7 +19,8 @@ export const metadata: Metadata = {
     locale: "ja_JP",
     siteName: TITLE,
   },
-  twitter: { card: "summary", title: TITLE, description: DESC },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESC },
+  alternates: { types: { "application/rss+xml": "/feed.xml" } },
   formatDetection: { telephone: false },
 };
 
@@ -57,6 +59,7 @@ export default function RootLayout({
             <p className="mt-2">© 2026 毎日AIレシピ</p>
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   );
