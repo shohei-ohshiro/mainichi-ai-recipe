@@ -25,10 +25,12 @@ export default function AboutPage() {
         記事はAIの支援を受けて執筆し、人間が内容を確認・編集して公開しています。
         レシピは実際の業務での利用経験に基づいています。
       </p>
-      <h2>note でも書いています</h2>
+      <h2>note・Zenn でも書いています</h2>
       <p>
-        noteでは同じテーマのレシピを読みやすい形で毎日投稿しています。
-        あわせてフォローしてもらえると嬉しいです。
+        <a href="https://note.com/every_ai_recipe">note</a>
+        では同じテーマのレシピを毎日投稿しています。エンジニア向けの一段深い版は
+        <a href="https://zenn.dev/every_ai_recipe">Zenn</a>
+        へ。あわせてフォローしてもらえると嬉しいです。
       </p>
     </div>
   );
