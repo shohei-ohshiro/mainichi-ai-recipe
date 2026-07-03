@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { marked } from "marked";
 import { getAllPosts, getPost } from "@/lib/posts";
+import ViewPing from "@/components/ViewPing";
 
 type Props = { params: { slug: string } };
 
@@ -26,6 +27,7 @@ export default function PostPage({ params }: Props) {
   const html = marked.parse(post.content, { async: false }) as string;
   return (
     <article>
+      <ViewPing slug={params.slug} />
       <time className="text-xs text-gray-400">{post.date}</time>
       <h1 className="mt-1 text-2xl font-bold leading-snug">{post.title}</h1>
       <div className="mt-2 flex flex-wrap gap-2">
