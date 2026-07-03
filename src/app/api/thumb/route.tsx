@@ -84,6 +84,11 @@ export async function GET(req: Request) {
       width: 1920,
       height: 1006,
       fonts: [{ name: "NotoSerifJP", data: font, weight: 700 }],
+      headers: {
+        // 司令室(別オリジン)の共有ボタンがblob取得できるようにする
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=3600",
+      },
     },
   );
 }
