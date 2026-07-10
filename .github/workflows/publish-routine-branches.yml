@@ -1,0 +1,55 @@
+name: ルーチンの枝を main へ自動公開
+
+# クラウドのスケジュール・ルーチン（毎朝の原稿生成・suzuri商品会議 等）の成果物が
+# main でなく claude/* 枝にコミットされるようになったため、その枝を自動で main に取り込む。
+# 手動の Claude Code 作業（同じ claude/ 接頭辞）を巻き込まないよう、コミットメッセージの
+# 接頭辞でルーチン成果物だけを対象にする。
+
+on:
+  push:
+    branches:
+      - 'claude/**'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-to-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ルーチン成果物なら main にマージして公開
+        run: |
+          set -euo pipefail
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          git fetch origin main "$BRANCH"
+          MSG="$(git log -1 --pretty=%s "origin/$BRANCH")"
+          echo "branch=$BRANCH head=\"$MSG\""
+
+          # ルーチンのコミット接頭辞だけを対象（手動WIPは除外）
+          if ! echo "$MSG" | grep -qE '^(note-factory|suzuri-factory|営業部|agency|毎日AIレシピ|vision-coach|weekly research|note記事|merge:|publish:)'; then
+            echo "ルーチンの成果物ではないためスキップします。"
+            exit 0
+          fi
+
+          git config user.name "routine-publisher[bot]"
+          git config user.email "actions@github.com"
+          git checkout -B main origin/main
+
+          if git merge --no-ff "origin/$BRANCH" -m "publish: $BRANCH → main（ルーチン自動公開）"; then
+            git push origin main
+            echo "main へ公開しました。"
+            # 取り込み済みの枝は掃除（失敗しても無視）
+            git push origin --delete "$BRANCH" || true
+          else
+            echo "::warning::マージ衝突のため自動公開できませんでした（手動マージが必要）: $BRANCH"
+            git merge --abort || true
+            exit 1
+          fi
