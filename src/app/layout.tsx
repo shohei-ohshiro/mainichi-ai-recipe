@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { Analytics } from "@vercel/analytics/react";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const TITLE = "毎日AIレシピ";
@@ -8,7 +9,7 @@ const DESC =
   "AIを毎日仕事で使う開発者が、専門用語ゼロで届ける「明日から使えるAI仕事術」。毎日1レシピ更新。";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mainichi-ai-recipe.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: { default: TITLE, template: `%s | ${TITLE}` },
   description: DESC,
   applicationName: TITLE,
@@ -20,7 +21,14 @@ export const metadata: Metadata = {
     siteName: TITLE,
   },
   twitter: { card: "summary_large_image", title: TITLE, description: DESC },
-  alternates: { types: { "application/rss+xml": "/feed.xml" } },
+  alternates: { canonical: "/", types: { "application/rss+xml": "/feed.xml" } },
+  // 独自ドメイン移行後も vercel.app 版が生き続けるので、
+  // どちらを見せてもGoogleには1つのサイトに見えるよう canonical を全ページに出す。
+  robots: { index: true, follow: true },
+  // Search Console の所有権確認。値は Vercel の環境変数で入れる（SEO-SETUP.md STEP 3）。
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
   formatDetection: { telephone: false },
 };
 

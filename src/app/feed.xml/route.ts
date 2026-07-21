@@ -1,6 +1,5 @@
 import { getAllPosts } from "@/lib/posts";
-
-const BASE = "https://mainichi-ai-recipe.vercel.app";
+import { SITE_URL as BASE } from "@/lib/site";
 
 function esc(s: string): string {
   return s
